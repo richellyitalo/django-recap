@@ -1,7 +1,10 @@
 <div class="recipe recipe-list-item">
-    <div class="recipe-cover">
-        <img src="{{ recipe.cover.url }}" alt="Temporário">
-    </div>
+    {% if recipe.cover %}
+        <div class="recipe-cover">
+            <img src="{{ recipe.cover.url }}" alt="{{ recipe.title }}">
+        </div>
+    {% endif %}
+
     <div class="recipe-title-container">
         <a href="{% url 'recipes:view' recipe.id %}">
             <h2 class="recipe-title">{{ recipe.title }}</h2>
@@ -9,24 +12,37 @@
     </div>
 
     <div class="recipe-author">
-        <span class="recipe-author-item">
-            <i class="fas fa-user"></i>
-            {{ recipe.author.first_name }} {{ recipe.author.last_name }}
-        </span>
+
+        {% if recipe.author is not None %}
+            <span class="recipe-author-item">
+                <i class="fas fa-user"></i>
+
+                {% if recipe.author.first_name %}
+                    {{ recipe.author.first_name }} {{ recipe.author.last_name }}
+                {% else %}
+                    {{ recipe.author.username }}
+                {% endif %}
+
+            </span>
+        {% endif %}
+
         <span class="recipe-author-item">
             <i class="fas fa-calendar-alt"></i>
             {{ recipe.created_at|date:"d/m/Y \à\s h:i" }}
         </span>
-        <span class="recipe-author-item">
-            <a href="/recipes/category/cafe-da-manha/">
-                <i class="fas fa-layer-group"></i>
-                <span>{{ recipe.category.name }}</span>
-            </a>
-        </span>
+
+        {% if recipe.category is not None %}
+            <span class="recipe-author-item">
+                <a href="{% url 'recipes:category-view' recipe.category.id recipe.category.name %}">
+                    <i class="fas fa-layer-group"></i>
+                    <span>{{ recipe.category.name }}</span>
+                </a>
+            </span>
+        {% endif %}
     </div>
 
     <div class="recipe-content">
-        <p>{{ recipe.description }}</p>
+        {{ recipe.description }}
     </div>
 
     <div class="recipe-meta-container">
@@ -57,7 +73,17 @@
 
     {% if is_detail_page is True %}
         <div class="preparation-steps">
-            {{ recipe.preparation_steps|linebreaks }}
+
+            {% if recipe.preparation_steps_is_html is True %}
+                {% autoescape off %}
+                    {{ recipe.preparation_steps|linebreaks }}
+                {% endautoescape %}
+            {% else %}
+                {% autoescape on %}
+                    {{ recipe.preparation_steps|linebreaks }}
+                {% endautoescape %}
+            {% endif %}
+            
         </div>
     {% endif %}
 
