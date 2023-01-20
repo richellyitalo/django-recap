@@ -25,8 +25,8 @@ def about_view(request):
 
 
 urlpatterns = [
+    path('', include('recipes.urls')),
     path('admin/', admin.site.urls),
-    path('recipes/', include('recipes.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

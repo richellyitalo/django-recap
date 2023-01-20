@@ -6,8 +6,8 @@ app_name = 'recipes'
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('<int:id>/', views.recipe_view, name='view'),
+    path('recipes/<int:id>/', views.recipe_view, name='view'),
     re_path(
-        r'^category/(?P<category_id>\d+)(?:/(?P<category_name>\S+))?/$',
+        r'^recipes/category/(?P<category_id>\d+)(?:/(?P<category_name>\S+))?/$',  # noqa: 501
         views.category, name='category-view'),
 ]

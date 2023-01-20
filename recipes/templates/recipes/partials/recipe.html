@@ -75,13 +75,9 @@
         <div class="preparation-steps">
 
             {% if recipe.preparation_steps_is_html is True %}
-                {% autoescape off %}
-                    {{ recipe.preparation_steps|linebreaks }}
-                {% endautoescape %}
+                {{ recipe.preparation_steps|safe }}
             {% else %}
-                {% autoescape on %}
-                    {{ recipe.preparation_steps|linebreaks }}
-                {% endautoescape %}
+                {{ recipe.preparation_steps|linebreaksbr }}
             {% endif %}
             
         </div>

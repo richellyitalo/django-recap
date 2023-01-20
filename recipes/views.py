@@ -1,10 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
-from django.shortcuts import render
-
-from utils.recipes.factory import make_recipe
+from django.shortcuts import get_list_or_404, render
 
 from .models import Category, Recipe
+
+# from utils.recipes.factory import make_recipe
 
 
 def home(request):
@@ -17,14 +17,17 @@ def home(request):
 def category(request, category_id, category_name=''):
     category = Category.objects.filter(id=category_id).first()
 
-    recipes = Recipe.objects.filter(
-        is_published=True,
-        category__id=category_id).order_by('-created_at')
+    recipes = get_list_or_404(
+        Recipe.objects.filter(
+            is_published=True,
+            category__id=category_id
+        ).order_by('-created_at')
+    )
 
     # if not recipes:
     #     return HttpResponse(content='Teste', status=404)
-    if not category:
-        raise Http404('Category Not Found')
+    # if not category:
+    #     raise Http404('Category Not Found')
 
     return render(request, 'recipes/pages/home.html', context={
         'recipes': recipes,
