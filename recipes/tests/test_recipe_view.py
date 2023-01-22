@@ -67,3 +67,75 @@ class RecipeViewTest(RecipeBaseTest):
         # content
         self.assertIn(recipe.title, content)
         self.assertIn(recipe.category.name, content)
+
+    def test_recipe_category_template_load_recipes(self):
+        needed_title = 'Recipe in Category Template'
+        recipe = self.make_recipe(title=needed_title)
+
+        response = self.client.get(
+            reverse(
+                'recipes:category-view',
+                kwargs={'category_id': recipe.category.id}
+            )
+        )
+        content = response.content.decode('utf-8')
+
+        # content
+        self.assertIn(needed_title, content)
+
+    def test_recipe_detail_template_load_recipe(self):
+        needed_title = 'Recipe in Detail Template'
+        recipe = self.make_recipe(title=needed_title)
+
+        response = self.client.get(
+            reverse(
+                'recipes:view',
+                kwargs={'id': recipe.id}
+            )
+        )
+        content = response.content.decode('utf-8')
+
+        # content
+        self.assertIn(needed_title, content)
+
+    def test_recipe_home_dont_load_unpublished_recipe(self):
+        self.make_recipe(is_published=False)
+
+        response = self.client.get(
+            reverse('recipes:home')
+        )
+
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            'No recipes found here',
+            content
+        )
+
+    def test_recipe_category_dont_load_unpublished_recipe(self):
+        recipe = self.make_recipe(is_published=False)
+
+        response = self.client.get(
+            reverse(
+                'recipes:category-view',
+                kwargs={
+                    'category_id': recipe.category.id
+                }
+            )
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_recipe_detail_dont_load_unpublished_recipe(self):
+        recipe = self.make_recipe(is_published=False)
+
+        response = self.client.get(
+            reverse(
+                'recipes:view',
+                kwargs={
+                    'id': recipe.id
+                }
+            )
+        )
+
+        self.assertEqual(response.status_code, 404)

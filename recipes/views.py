@@ -37,7 +37,7 @@ def category(request, category_id):
 
 def recipe_view(request, id):
     try:
-        recipe = Recipe.objects.get(id=id)
+        recipe = Recipe.objects.get(id=id, is_published=True)
     except ObjectDoesNotExist:
         raise Http404('Recipe not found')
 
