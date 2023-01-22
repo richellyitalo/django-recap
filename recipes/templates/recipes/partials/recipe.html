@@ -7,7 +7,7 @@
 
     <div class="recipe-title-container">
         <a href="{% url 'recipes:view' recipe.id %}">
-            <h2 class="recipe-title">{{ recipe.title }}</h2>
+            <h2 class="recipe-title">{{ recipe.title }}</h2>5
         </a>
     </div>
 
@@ -33,7 +33,7 @@
 
         {% if recipe.category is not None %}
             <span class="recipe-author-item">
-                <a href="{% url 'recipes:category-view' recipe.category.id recipe.category.name %}">
+                <a href="{% url 'recipes:category-view' recipe.category.id %}">
                     <i class="fas fa-layer-group"></i>
                     <span>{{ recipe.category.name }}</span>
                 </a>

@@ -14,7 +14,7 @@ def home(request):
     })
 
 
-def category(request, category_id, category_name=''):
+def category(request, category_id):
     category = Category.objects.filter(id=category_id).first()
 
     recipes = get_list_or_404(
